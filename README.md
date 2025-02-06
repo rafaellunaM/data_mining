@@ -3,4 +3,6 @@ project for college
 
 
 # Start
-uvicorn main:app
+
+start app: uvicorn main:app
+start monitoring: docker-compose up -d
