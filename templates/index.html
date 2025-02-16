@@ -16,11 +16,20 @@
             <label for="X2_2">Gênero Masculino (Se sim, marque esta caixinha):</label>
             <input type="checkbox" id="X2_2">
 
-            <label for="X3_2">Educação (Se sim, marque esta caixinha):</label>
-            <input type="checkbox" id="X3_2">
+            <label for="X3_2">Educação:</label>
+            <select id="X3_2" required>
+                <option value="1">Pós-graduação</option>
+                <option value="2">Universidade</option>
+                <option value="3">Ensino Médio</option>
+                <option value="4">Outros</option>
+            </select>
 
-            <label for="X4_2">Estado Civil (Se sim, marque esta caixinha):</label>
-            <input type="checkbox" id="X4_2">
+            <label for="X4_2">Estado Civil:</label>
+            <select id="X4_2" required>
+                <option value="1">Casado</option>
+                <option value="2">Solteiro</option>
+                <option value="3">Outros</option>
+            </select>
 
             <label for="X5">Idade (ano):</label>
             <input type="number" id="X5" required>
@@ -88,7 +97,6 @@
         <div id="result" style="display: none;">
             <h3>Resultado:</h3>
             <p id="prediction">Condição do usuário: </p>
-            <p id="class_name">Nome da classe: </p>
         </div>
     </div>
 

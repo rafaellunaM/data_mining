@@ -109,7 +109,7 @@ async def predict(request: PredictionRequest):
                             request.X9, request.X10, request.X11, request.X12, request.X13,
                             request.X14, request.X15, request.X16, request.X17, request.X18,
                             request.X19, request.X20, request.X21, request.X22, request.X23,
-                            request.X24, int(request.X2_2), int(request.X3_2), int(request.X4_2)
+                            request.X24, request.X2_2, request.X3_2, request.X4_2
                             ]])
 
     true_label = 1

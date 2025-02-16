@@ -3,8 +3,8 @@ document.getElementById("prediction-form").addEventListener("submit", function(e
     
     const X1 = parseFloat(document.getElementById("X1").value);
     const X2_2 = document.getElementById("X2_2").checked ? 1 : 0;
-    const X3_2 = document.getElementById("X3_2").checked ? 1 : 0;
-    const X4_2 = document.getElementById("X4_2").checked ? 1 : 0;
+    const X3_2 = (  document.getElementById("X3_2").value);
+    const X4_2 = (  document.getElementById("X4_2").value);
     const X5 = parseFloat(document.getElementById("X5").value);
     const X6 = parseFloat(document.getElementById("X6").value);
     const X7 = parseFloat(document.getElementById("X7").value);
@@ -40,7 +40,6 @@ document.getElementById("prediction-form").addEventListener("submit", function(e
     .then(data => {
         const predictionText = data.prediction === 1 ? "Inadimplente" : "Adimplente";
         document.getElementById("prediction").innerText = "Classe: " + predictionText;
-        document.getElementById("class_name").innerText = "Nome da classe: " + data.class_name;
         document.getElementById("result").style.display = "block";
     })
     .catch(error => {
