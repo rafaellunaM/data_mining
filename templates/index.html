@@ -3,31 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Previsão de Flor Iris</title>
+    <title>Previsão de Inadimplência</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Previsão de Flor Iris</h1>
+        <h1>Previsão de Inadimplência</h1>
         <form id="prediction-form">
-            <label for="sepal_length">Comprimento da Sépala (cm):</label>
-            <input type="number" id="sepal_length" required>
+            <label for="X1">Valor do Crédito:</label>
+            <input type="number" id="X1" required>
 
-            <label for="sepal_width">Largura da Sépala (cm):</label>
-            <input type="number" id="sepal_width" required>
+            <label for="X2_2">Gênero Masculino (Se sim, marque esta caixinha):</label>
+            <input type="checkbox" id="X2_2">
 
-            <label for="petal_length">Comprimento da Pétala (cm):</label>
-            <input type="number" id="petal_length" required>
+            <label for="X3_2">Educação (Se sim, marque esta caixinha):</label>
+            <input type="checkbox" id="X3_2">
 
-            <label for="petal_width">Largura da Pétala (cm):</label>
-            <input type="number" id="petal_width" required>
+            <label for="X4_2">Estado Civil (Se sim, marque esta caixinha):</label>
+            <input type="checkbox" id="X4_2">
+
+            <label for="X5">Idade (ano):</label>
+            <input type="number" id="X5" required>
+
+            <label for="X6">Histórico de Pagamento (Setembro):</label>
+            <input type="number" id="X6" required>
+
+            <label for="X7">Histórico de Pagamento (Agosto):</label>
+            <input type="number" id="X7" required>
+
+            <label for="X8">Histórico de Pagamento (Julho):</label>
+            <input type="number" id="X8" required>
+
+            <label for="X9">Histórico de Pagamento (Junho):</label>
+            <input type="number" id="X9" required>
+
+            <label for="X10">Histórico de Pagamento (Maio):</label>
+            <input type="number" id="X10" required>
+
+            <label for="X11">Histórico de Pagamento (Abril):</label>
+            <input type="number" id="X11" required>
+
+            <label for="X12">Fatura em Setembro:</label>
+            <input type="number" id="X12" required>
+
+            <label for="X13">Fatura em Agosto:</label>
+            <input type="number" id="X13" required>
+
+            <label for="X14">Fatura em Julho:</label>
+            <input type="number" id="X14" required>
+
+            <label for="X15">Fatura em Junho:</label>
+            <input type="number" id="X15" required>
+
+            <label for="X16">Fatura em Maio:</label>
+            <input type="number" id="X16" required>
+
+            <label for="X17">Fatura em Abril:</label>
+            <input type="number" id="X17" required>
+
+            <label for="X18">Pagamento em Setembro:</label>
+            <input type="number" id="X18" required>
+
+            <label for="X19">Pagamento em Agosto:</label>
+            <input type="number" id="X19" required>
+
+            <label for="X20">Pagamento em Julho:</label>
+            <input type="number" id="X20" required>
+
+            <label for="X21">Pagamento em Junho:</label>
+            <input type="number" id="X21" required>
+
+            <label for="X22">Pagamento em Maio:</label>
+            <input type="number" id="X22" required>
+
+            <label for="X23">Pagamento em Abril:</label>
+            <input type="number" id="X23" required>
+
+            <label for="X24">Valor do Crédito (Novamente):</label>
+            <input type="number" id="X24" required>
 
             <button type="submit">Fazer Previsão</button>
         </form>
 
         <div id="result" style="display: none;">
             <h3>Resultado:</h3>
-            <p id="prediction">Classe: </p>
+            <p id="prediction">Condição do usuário: </p>
             <p id="class_name">Nome da classe: </p>
         </div>
     </div>

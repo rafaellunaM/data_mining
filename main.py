@@ -59,26 +59,38 @@ instrumentator.instrument(app).expose(app)
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-with open("iris_model.pkl", "rb") as f:
+with open("xgboost_model_pickle.pkl", "rb") as f:
     model = pickle.load(f)
 
 class PredictionRequest(BaseModel):
-    sepal_length: float
-    sepal_width: float
-    petal_length: float
-    petal_width: float
+    X1: float
+    X5: float
+    X6: float
+    X7: float
+    X8: float
+    X9: float
+    X10: float
+    X11: float
+    X12: float
+    X13: float
+    X14: float
+    X15: float
+    X16: float
+    X17: float
+    X18: float
+    X19: float
+    X20: float
+    X21: float
+    X22: float
+    X23: float
+    X24: float
+    X2_2: bool
+    X3_2: bool
+    X4_2: bool
 
 class PredictionResponse(BaseModel):
     prediction: int
     class_name: str
-
-initial_accuracy = 0.95
-
-def calculate_drift(predictions, true_labels):
-    current_accuracy = accuracy_score(true_labels, predictions)
-    drift = abs(current_accuracy - initial_accuracy)
-    return drift, current_accuracy
-
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
@@ -86,42 +98,24 @@ async def home(request: Request):
 
 @app.post("/predict", response_model=PredictionResponse)
 async def predict(request: PredictionRequest):
-    input_data = np.array([[request.sepal_length, request.sepal_width, request.petal_length, request.petal_width]])
-
-    true_label = 1
+    input_data = np.array([[request.X1, request.X5, request.X6, request.X7, request.X8,
+                            request.X9, request.X10, request.X11, request.X12, request.X13,
+                            request.X14, request.X15, request.X16, request.X17, request.X18,
+                            request.X19, request.X20, request.X21, request.X22, request.X23,
+                            request.X24, int(request.X2_2), int(request.X3_2), int(request.X4_2)
+                            ]])
 
     start_time = time.time()
 
     try:
         prediction = model.predict(input_data)[0]
-        class_names = ['setosa', 'versicolor', 'virginica']
+        
+        class_names = ['Class 0', 'Class 1']
         class_name = class_names[prediction]
 
-        total_predictions_counter.labels(model="iris").inc()
-
-        if prediction == true_label:
-            correct_predictions_counter.labels(model="iris").inc()
-
-        correct = correct_predictions_counter.labels(model="iris")._value.get()
-        total = total_predictions_counter.labels(model="iris")._value.get()
-        if total > 0:
-            accuracy = correct / total
-        else:
-            accuracy = 0.0
-        accuracy_gauge.labels(model="iris").set(accuracy)
-
-        drift, current_accuracy = calculate_drift([prediction], [true_label])
-
-        model_performance_drift_gauge.labels(model="iris").set(drift)
-
-        prediction_success_counter.labels(model="iris").inc()
-
-        request_duration_histogram.labels(handler="/predict", method="POST").observe(time.time() - start_time)
-
-        return {"prediction": prediction, "class_name": class_name, "current_accuracy": current_accuracy, "drift": drift}
+        return PredictionResponse(
+            prediction=prediction,
+            class_name=class_name,
+        )
     except Exception as e:
-        prediction_error_counter.labels(model="iris", error_type=str(e)).inc()
-
-        request_duration_histogram.labels(handler="/predict", method="POST").observe(time.time() - start_time)
-
         return {"error": str(e)}
