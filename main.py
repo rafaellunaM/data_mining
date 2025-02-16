@@ -85,8 +85,8 @@ class PredictionRequest(BaseModel):
     X23: float
     X24: float
     X2_2: bool
-    X3_2: bool
-    X4_2: bool
+    X3_2: int
+    X4_2: int
 
 class PredictionResponse(BaseModel):
     prediction: int
