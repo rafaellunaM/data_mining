@@ -41,11 +41,11 @@ prediction_rate_counter = Counter(
 )
 
 class_predictions_counter = Counter(
-    'model_class_predictions_total', 'Total number of predictions per class', ['model', 'class']
+    'model_class_predictions_total', 'Total number of predictions per class', ['model', 'test']
 )
 
 class_errors_counter = Counter(
-    'model_class_prediction_errors', 'Total number of prediction errors per class', ['model', 'class']
+    'model_class_prediction_errors', 'Total number of prediction errors per class', ['model', 'test']
 )
 
 model_performance_drift_gauge = Gauge('model_performance_drift', 'Drift in model performance', ['model'])
@@ -92,6 +92,13 @@ class PredictionResponse(BaseModel):
     prediction: int
     class_name: str
 
+initial_accuracy = 0.95
+
+def calculate_drift(predictions, true_labels):
+    current_accuracy = accuracy_score(true_labels, predictions)
+    drift = abs(current_accuracy - initial_accuracy)
+    return drift, current_accuracy
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
@@ -105,17 +112,45 @@ async def predict(request: PredictionRequest):
                             request.X24, int(request.X2_2), int(request.X3_2), int(request.X4_2)
                             ]])
 
+    true_label = 1
+
     start_time = time.time()
 
     try:
         prediction = model.predict(input_data)[0]
-        
-        class_names = ['Class 0', 'Class 1']
+
+        class_names = ['Adimplente', 'Inadimplente']
         class_name = class_names[prediction]
+
+        total_predictions_counter.labels(model="credit_default").inc()
+        class_predictions_counter.labels(model="credit_default", test=class_name).inc()
+
+        if prediction == true_label:
+            correct_predictions_counter.labels(model="credit_default").inc()
+        else:
+            class_errors_counter.labels(model="credit_default", test=class_name).inc()
+
+        correct = correct_predictions_counter.labels(model="credit_default")._value.get()
+        total = total_predictions_counter.labels(model="credit_default")._value.get()
+        accuracy = correct / total if total > 0 else 0.0
+        accuracy_gauge.labels(model="credit_default").set(accuracy)
+
+        drift, current_accuracy = calculate_drift([prediction], [true_label])
+
+        model_performance_drift_gauge.labels(model="credit_default").set(drift)
+
+        prediction_success_counter.labels(model="credit_default").inc()
+    
+        request_duration_histogram.labels(handler="/predict", method="POST").observe(time.time() - start_time)
 
         return PredictionResponse(
             prediction=prediction,
-            class_name=class_name,
+            class_name=class_name
         )
+
     except Exception as e:
+        prediction_error_counter.labels(model="credit_default", error_type=str(e)).inc()
+
+        request_duration_histogram.labels(handler="/predict", method="POST").observe(time.time() - start_time)
+
         return {"error": str(e)}
